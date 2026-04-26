@@ -1,0 +1,17 @@
+# /etc/apt/preferences.d/libre
+
+Package: libreoffice*
+Pin: version 1:7.3.6*
+Pin-Priority: 1001
+
+Package: ure*
+Pin: version 1:7.3.6*
+Pin-Priority: 1001
+
+Package: libuno*
+Pin: version 1:7.3.6*
+Pin-Priority: 1001
+
+Package: uno-libs-private*
+Pin: version 1:7.3.6*
+Pin-Priority: 1001

@@ -1,0 +1,25 @@
+# roles/repo/tasks/set-pgdg17-el9-repo.yml
+---
+- name: "Populating repository 'pgdg-redhat-all.repo' template for external repo 'pgdg17'"
+  template:
+    src: files/pgdg-redhat-all.repo
+    dest: /etc/yum.repos.d/pgdg-redhat-all.repo
+    group: root
+    owner: root
+    mode: 0644
+  register: pgdg17template
+
+- name: "Configuring the verification package: add 'PGDG-RPM-GPG-Key-RHEL' file"
+  copy:
+    src: files/PGDG-RPM-GPG-KEY-RHEL
+    dest: /etc/pki/rpm-gpg/PGDG-RPM-GPG-KEY-RHEL
+    group: root
+    owner: root
+    mode: 0644
+
+- name: "Configuring the verification package: import 'PGDG-RPM-GPG-Key-RHEL' file"
+  shell: rpm --import /etc/pki/rpm-gpg/PGDG-RPM-GPG-KEY-RHEL
+
+- name: Clean out cache and recreate it again only if template 'pgdg-redhat-all.repo' was changed
+  shell: "dnf clean all && dnf makecache"
+  when: pgdg17template.changed

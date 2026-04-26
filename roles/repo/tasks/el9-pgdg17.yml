@@ -1,0 +1,8 @@
+# roles/repo/tasks/el9-pgdg17.yml
+---
+
+- name: "Add Luxms BI repositories for EL 9"
+  import_tasks: set-luxms-el9-repo.yml
+
+- name: "Add PGDG17 repository for EL 9"
+  import_tasks: set-pgdg17-el9-repo.yml

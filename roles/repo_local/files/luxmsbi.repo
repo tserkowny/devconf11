@@ -1,0 +1,19 @@
+#[luxms-thirdparty]
+#name=Luxms 3rd-party packages
+##baseurl=https://download.luxms.ru/repository/thirdparty/redos/8/$basearch/
+#baseurl=file:///opt/lrepo/
+#enabled=1
+#gpgcheck=0
+#repo_gpgcheck=0
+#gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Luxms
+
+[luxms-bi-lrepo]
+name=Luxms BI Repository 
+#baseurl=https://download.luxms.ru/repository/customers/11/redos/8/$basearch/
+baseurl=file:///opt/lrepo/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Luxms
+#username=cust
+#password=rp051

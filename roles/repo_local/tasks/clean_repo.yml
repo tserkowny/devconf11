@@ -1,0 +1,27 @@
+---
+
+- name: "Remove YUM repositories"
+  yum_repository:
+    name: "{{ item }}"
+    state: absent
+    file: luxmsbi
+  loop:
+    - luxms-thirdparty
+    - luxms-datasets
+    - luxms-bi-datasets
+    - luxms-bi-unstable
+    - luxms-bi{{ bi_ver }}
+  when: ansible_os_family == "RedHat"
+#  when: ansible_os_family == "RedHat" or ansible_os_family == "RED"
+
+#- name: "Remove Luxms dev repository"
+#  apt_repository:
+#    repo: "{{ item }}"
+#    state: absent
+#  loop:
+#    - "deb [arch=amd64] https://devrepo.spb.luxms.com/debian orel main"
+#    - "deb [arch=amd64] https://devrepo.spb.luxms.com/luxms-bi/{{ bi_ver }}/alse 1.7_x86-64 main"
+#    - "deb [arch=amd64] https://devrepo.spb.luxms.com/luxms-bi/datasets/alse/noarch 1.7_x86-64 main"
+#    - "deb [arch=amd64] https://devrepo.spb.luxms.com/luxms-thirdparty/alse 1.7_x86-64 main"
+#    - "deb https://deb.debian.org/debian/ buster main contrib non-free"
+#  when: ansible_os_family is match("Astra Linux*")

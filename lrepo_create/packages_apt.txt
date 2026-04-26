@@ -1,0 +1,11 @@
+luxmsbi-jatoba5
+keydb-server
+luxmsbi-web
+nats-server
+luxmsbi-appserver-mono
+libreoffice-calc
+luxms-databoring
+luxmsbi-pumpushka
+luxmsbi-docs
+luxmsbi-gateway
+luxmsbi-pg-ds-infosec

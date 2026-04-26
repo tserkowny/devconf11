@@ -1,0 +1,11 @@
+---
+
+- name: "Enable https service"
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  loop:
+    - http
+    - https

@@ -1,0 +1,30 @@
+# ./roles/repo/tasks/astra7.yml
+---
+
+- name: "Installing curl and wget"
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - wget
+
+- name: "Add repositories Astra Linux SE 1.7"
+  import_tasks: set-luxms-astra7-repo.yml
+
+- name: "Disable nginx vendor preset"
+  lineinfile:
+    dest: /lib/systemd/system-preset/90-systemd.preset
+    line: "disable nginx.service"
+    owner: root
+    state: present
+    insertafter: EOF
+  become: yes
+
+- name: "Set nginx preference Priority"
+  copy:
+    src: files/nginx.apt-preference
+    dest: /etc/apt/preferences.d/nginx
+    owner: root
+    group: root
+    mode: '0644'
