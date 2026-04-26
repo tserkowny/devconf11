@@ -6,14 +6,14 @@
 ## Description:
 Установка '**Luxms BI 11***' на хост [среды разработки](https://luxmsbi.ru/docs/guides/sysadm-guide/deploy-types#%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B3%D1%83%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D0%B4%D0%BB%D1%8F-%D1%81%D1%80%D0%B5%D0%B4-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8) посредством сценариев Ansible.
 
-Дублирует пакет [luxmsbi-setup](https://gito.luxms.com/devops/luxmsbi-setup) для _установки Luxms BI на 1 хост с помощью Ansible_.
+Дублирует пакет [luxmsbi-setup](https://gito.lux.com/devops/luxmsbi-setup) для _установки Luxms BI на 1 хост с помощью Ansible_.
 Имеются следующие отличия :
 1. выполняется [подключение сетевых репозиториев](https://luxmsbi.ru/docs/guides/sysadm-guide/repository#%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BA-%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F%D0%BC-bi) (роль 'repo'):
 ```shell
  'luxms-bi' = 'Luxms BI Repository'
  'luxms-thirdparty' = 'Luxms BI 3rd-party packages'
 ```
-2. выполняется [подключение локального репозитория](https://wiki.spb.luxms.com/ru/support/support-memo/memo-luxmsbi/memo-luxmsbi-install-from-local-repo) (роль 'repo_local'):
+2. выполняется [подключение локального репозитория](https://wiki.lux.com/ru/support/support-memo/memo-luxmsbi/memo-luxmsbi-install-from-local-repo) (роль 'repo_local'):
 ```shell
  'luxms-bi-lrepo' = 'Luxms BI Repository'
  'luxms-bi-lrepo' = 'Luxms BI 3rd-party packages'
@@ -65,25 +65,7 @@ git push -uf origin main
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gito.luxms.com/vgoryachkin/l11-devconf-setup/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- [ ] [Set up project integrations](git@github.com:tserkowny/devconf11.git)
 
 ***
 
