@@ -58,7 +58,7 @@
 
 ```
 cd existing_repo
-git remote add origin https://gito.luxms.com/vgoryachkin/l11-devconf-setup.git
+git remote add origin git@github.com:tserkowny/devconf11.git
 git branch -M main
 git push -uf origin main
 ```
