@@ -1,0 +1,13 @@
+postgresql15
+luxmsbi-pg15
+keydb
+luxmsbi-web
+nats-server
+luxmsbi-appserver-mono
+libreoffice-calc
+luxms-databoring
+luxmsbi-pumpushka
+luxmsbi-docs
+python3-psycopg2
+luxmsbi-gateway
+luxmsbi-pg-ds-infosec

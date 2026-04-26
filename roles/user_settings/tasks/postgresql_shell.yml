@@ -1,0 +1,4 @@
+---
+
+- name: Настраиваем Luxms BI Database
+  shell: psql -d postgresql://bi:bi@127.0.0.1:5432/mi -c "{{ pg_user_settings_shell }};"

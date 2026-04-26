@@ -1,0 +1,18 @@
+# ./roles/repo_local/tasks/main.yml
+---
+
+- name: "Importing RPM-based tasks for RedHat"
+  include_tasks: redhat.yml
+  when :
+    ansible_os_family == "RedHat"
+
+- name: "Import RPM-based tasks for RED OS"
+  include_tasks: redos.yml
+  when :
+    ansible_os_family == "RED"
+
+- name: "Import Deb-based tasks for Astra Linux"
+  include_tasks: astra.yml
+  when:
+    ansible_os_family is match("Astra Linux*")
+

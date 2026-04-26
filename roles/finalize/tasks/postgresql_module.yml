@@ -1,0 +1,32 @@
+---
+
+- name: Меняем значение default_val для cfg_key, если у нас appserver mono
+  postgresql_query:
+    query: "UPDATE adm.configs SET default_val = 'http://127.0.0.1:8080' where cfg_key = 'datagate.url.prefix'"
+    db: mi
+    login_host: 127.0.0.1
+    port: 5432
+    login_user: bi
+    login_password: bi
+
+- name: Get Databoring JWT-token
+  postgresql_query:
+    query: SELECT jwt FROM webapi.access_tokens t left join adm.users u on t.login_as=u.id where u.username='databoring-service'
+    db: mi
+    login_host: 127.0.0.1
+    port: 5432
+    login_user: bi
+    login_password: bi
+  register: jwt_arr
+
+- set_fact:
+    DATABORING_JWT: "{{ jwt_arr.query_result.0.jwt }}"
+
+- name: "Пампушка - Включаем параметры в adm.configs для её работы"
+  postgresql_query:
+    query: update adm.configs set is_enabled = '1', cfg_val = 'audit' where cfg_key = 'audit.tracking.topic';
+    db: 'mi'
+    login_host: '127.0.0.1'
+    port: '5432'
+    login_user: 'bi'
+    login_password: 'bi'

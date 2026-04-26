@@ -1,0 +1,46 @@
+# roles/repo_local/tasks/set-luxms-dnf-repo.yml
+---
+- name: "Coping 'IPA' certificates"
+  copy:
+    src: files/{{ item }}
+    dest: /etc/pki/ca-trust/source/anchors
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+  - LuxmsCA.crt
+  - ipaSubCA.crt
+
+- name: "Updating root certificates: install ca-certificates"
+  yum:
+    name:
+    - ca-certificates
+    state: latest
+    validate_certs: no
+
+- name: "Updating root certificates: update-ca-trust"
+  shell: sudo update-ca-trust
+
+- name: "Populating client repository 'luxmsbi.repo' template for external repo"
+  copy:
+    src: files/luxmsbi.repo
+    dest: /etc/yum.repos.d/luxmsbi.repo
+    group: root
+    owner: root
+    mode: 0644
+  register: luxmsbirepotemplate
+
+- name: Clean out cache and recreate it again only if template was changed
+  shell: "dnf clean all && dnf makecache"
+  when: luxmsbirepotemplate.changed
+
+- name: "Configuring the verification package: add 'RPM-GPG-Key-Luxms' file"
+  copy:
+    src: files/RPM-GPG-KEY-Luxms
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-Luxms
+    group: root
+    owner: root
+    mode: 0644
+
+- name: "Configuring the verification package: import 'RPM-GPG-Key-Luxms'"
+  shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-Luxms

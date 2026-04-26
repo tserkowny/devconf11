@@ -1,0 +1,4 @@
+---
+
+- name: "Firewall Settings for OS"
+  ansible.builtin.include_tasks: "firewall_settings/{{ ansible_os_family | lower }}.yml"

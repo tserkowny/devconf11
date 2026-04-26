@@ -1,0 +1,61 @@
+---
+
+- name: "Install pip module on Linux"
+  package:
+    name: python3-pip
+  when: ansible_os_family != "Altlinux"
+
+- name: "Install pip module on Altlinux"
+  package:
+    name: python3-module-pip
+  when: ansible_os_family == "Altlinux"
+
+- name: "Install Certbot"
+  pip:
+    name: certbot
+    executable: pip3
+    state: present
+
+- name: Отправляем запрос на получение сертификата
+  shell: "certbot certonly --webroot --agree-tos --email {{ email }} --webroot-path /opt/luxmsbi/web -d {{ domain_name }}"
+  environment:
+    PATH: "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+  register: certbot_result
+  ignore_errors: true
+
+- block:
+
+  - name: Пропишем открытый сертификат для домена в nginx
+    replace:
+      path: /opt/luxmsbi/conf/nginx/conf.d/luxmsbi.ssl
+      regexp: '(.*)/opt/luxmsbi/conf/ssl/host-full.cer;'
+      replace: '\1/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;'
+
+  - name: Пропишем закрытый сертификат для домена в nginx
+    replace:
+      path: /opt/luxmsbi/conf/nginx/conf.d/luxmsbi.ssl
+      regexp: '(.*)/opt/luxmsbi/conf/ssl/host.key;'
+      replace: '\1/etc/letsencrypt/live/{{ domain_name }}/privkey.pem;'
+
+  - name: Снимаем комментарий для подключения конфигурации SSL
+    replace:
+      path: /opt/luxmsbi/conf/nginx/conf.d/entrypoint.conf
+      regexp: '(.*)#include /opt/luxmsbi/conf/nginx/conf.d/luxmsbi.ssl'
+      replace: '\1include /opt/luxmsbi/conf/nginx/conf.d/luxmsbi.ssl;'
+
+  - name: Создадим каталог /etc/nginx/ssl
+    file:
+      path: /etc/nginx/ssl
+      state: directory
+
+  - name: Создаем Diffie-Hellman сертификат (2048 bits)
+    openssl_dhparam:
+      path: /etc/nginx/ssl/dhparam.pem
+      size: 2048
+
+  - name: Перезапускаем luxmsbi-web
+    systemd:
+      name: luxmsbi-web
+      state: restarted
+
+  when: certbot_result.stdout is search('Congratulations') or certbot_result.stdout is search('Successfully')

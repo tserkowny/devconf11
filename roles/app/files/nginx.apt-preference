@@ -1,0 +1,11 @@
+Package: nginx*
+Pin: version 1.22.1*
+Pin-Priority: 1001
+
+Package: libnginx-mod-*
+Pin: version 1.22.1*
+Pin-Priority: 1001
+
+Package: lua-resty-lrucache
+Pin: version 0.13-10
+Pin-Priority: 1001

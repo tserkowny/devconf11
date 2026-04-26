@@ -1,0 +1,135 @@
+# roles/database/tasks/main.yml
+---
+
+- name: Reading the version of the installed PostgreSQL
+  set_fact:
+    PG_VER: "{{ lookup('file', '/opt/lux-upd/install/.installed') }}"
+
+- name: "Stop PostgreSQL DB"
+  systemd:
+    state: stopped
+#    name: "{{ PG_SERVICE[ansible_os_family] }}"
+    name: "{{ PG_SERVICE[ansible_os_family][ansible_distribution_major_version] }}"
+
+- name: Register Contents of PGDATA Folder
+  shell: "ls /opt/lux-upd/install/tmp"
+  register: dist_contents
+
+- name: Register Contents of PGDATA Folder
+  shell: "ls /data/pgdata"
+  register: pg_contents
+
+- name: "Init PostgreSQL DB"
+  shell: "initdb"
+  become: yes
+  become_method: sudo
+  become_user: postgres
+  become_flags: -i
+  when:
+    - pg_contents["stdout_lines"] | length == 0
+    - ansible_os_family == "RED" or ansible_os_family == "REDOS" or ansible_os_family == "Rocky" and PG_VER == "15" or ansible_os_family == "RedHat" and PG_VER == "15"
+
+- name: "Init PostgreSQL17 DB on Rocky|RedHat 9"
+  #  shell: "/usr/pgsql-17/bin/postgresql-17-setup initdb"
+  shell: "initdb"
+  #  shell: "LANG=ru_RU.UTF-8 initdb --encoding=UTF8 --locale=ru_RU.UTF-8 -D /data/pgdata"
+  become: yes
+  become_user: postgres
+  become_flags: -i
+  when:
+#    - pg_contents["stdout_lines"] | length == 0
+    - ansible_os_family == "RedHat" and ansible_distribution_major_version == "9" and PG_VER == "17" or ansible_os_family == "Rocky" and ansible_distribution_major_version == "9" and PG_VER == "17"
+
+- name: Changing the path to PGDATA for systemd
+  block:
+
+    - name: Creating a drop in directory for the DBMS service
+      file:
+        owner: root
+        group: root
+        mode: 0755
+#        path: "/etc/systemd/system/{{ PG_SERVICE[ansible_os_family] }}.service.d"
+        path: "/etc/systemd/system/{{ PG_SERVICE[ansible_os_family][ansible_distribution_major_version] }}.service.d"
+        state: directory
+
+    - name: Setting a new value for PGDATA
+      ini_file:
+#        dest: "/etc/systemd/system/{{ PG_SERVICE[ansible_os_family] }}.service.d/override.conf"
+        dest: "/etc/systemd/system/{{ PG_SERVICE[ansible_os_family][ansible_distribution_major_version] }}.service.d/override.conf"
+        owner: root
+        group: root
+        mode: 0644
+        no_extra_spaces: true
+        section: Service
+        option: Environment=PGDATA
+        value: /data/pgdata
+
+    - name: Re-reading the systemd configuration
+      systemd:
+        daemon_reload: yes
+
+  when: > 
+    ansible_os_family == "RED" or 
+    ansible_os_family == "REDOS" or 
+    ansible_os_family == "Altlinux" or
+    ansible_os_family == "Rocky" or
+    ansible_os_family == "RedHat"
+
+- name: "Start PostgreSQL DB"
+  systemd:
+    state: started
+    enabled: yes
+    name: "{{ PG_SERVICE[ansible_os_family] }}"
+
+- name: "Install Luxms BI Database and DS Infosec on RPM"
+  shell: "dnf -y install /opt/lux-upd/install/tmp/*"
+  when:
+    - dist_contents["stdout_lines"] | length > 0
+    - ansible_os_family == "RED" or ansible_os_family == "REDOS" or ansible_os_family == "Rocky" or ansible_os_family == "RedHat"
+
+- name: "Install Luxms BI Database and DS Infosec on Deb"
+  shell: "apt -y install /opt/lux-upd/install/tmp/*"
+  when:
+    - dist_contents["stdout_lines"] | length > 0
+    - ansible_os_family == "Astra Linux"
+
+- name: "Install Luxms BI Database and DS Infosec on Alt"
+  shell: "apt-get -y install /opt/lux-upd/install/tmp/*"
+  when:
+    - dist_contents["stdout_lines"] | length > 0
+    - ansible_os_family == "Altlinux"
+
+- name: "Install Luxms BI Database and DS Infosec on MosOS"
+  shell: "zypper install -y /opt/lux-upd/install/tmp/*"
+  when:
+    - dist_contents["stdout_lines"] | length > 0
+    - ansible_os_family is match("MosOS*")
+
+- name: "Install Demo Atlases"
+  include_tasks: "install_databases/{{ ansible_os_family | lower }}.yml"
+  when: demo_atlas | default(false) == true
+
+- name: Uploading postgresql tasks for newer versions of ansible
+  include_tasks: postgresql_module.yml
+  when:
+    - ansible_version.full is version("2.9", '>=')
+    - ansible_os_family is not match("MosOS*")
+
+- name: Uploading postgresql tasks for ansible version lower than 2.9 or is it MosOS
+  include_tasks: postgresql_shell.yml
+  when: >
+    ansible_version.full is version("2.9", '<') or
+    ansible_os_family is match("MosOS*")
+
+- name: Updating the mi database
+  shell: /usr/share/luxmsbi-pg/bi-setupdb.sh --upgrade > "/data/log/ansible/setupdb.{{ ansible_date_time.epoch }}.txt"
+  become: yes
+  become_user: postgres
+  become_flags: -i
+
+- name: Deleting a directory with downloaded database packages
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_fileglob:
+    - /opt/lux-upd/install/tmp/*

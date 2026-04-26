@@ -1,0 +1,9 @@
+---
+
+- name: Загружаем задачи postgresql для более новых версий ansible
+  include_tasks: postgresql_module.yml
+  when: ansible_version.full is version("2.9", '>=')
+
+- name: Загружаем задачи postgresql для версии ansible ниже 2.9
+  include_tasks: postgresql_shell.yml
+  when: ansible_version.full is version("2.9", '<')

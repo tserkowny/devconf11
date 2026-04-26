@@ -1,0 +1,60 @@
+---
+
+- name: Удаление репозитория для систем RPM
+  block:
+
+  - name: "Удаление Thirdparty Repository"
+    yum_repository:
+      name: luxms-thirdparty
+      file: luxmsbi
+      state: absent
+
+  - name: "Удаление BI Repository"
+    yum_repository:
+      name: luxms-bi
+      file: luxmsbi
+      state: absent
+
+  when: > 
+    ansible_os_family == "RED" or 
+    ansible_os_family == "REDOS" or
+    ansible_os_family == "Rocky" or
+    ansible_os_family == "RedHat"
+
+
+- name: Удаление репозитория для систем DEB
+  block:
+
+  - name: Удаляем файл с настройками репозитория luxmsbi
+    file:
+      path: /etc/apt/sources.list.d/luxmsbi.list
+      state: absent
+
+  when: ansible_os_family == "Astra Linux"
+
+
+- name: Удаление репозитория для системы ALT
+  block:
+
+  - name: Удаляем файл с настройками репозитория luxmsbi
+    file:
+      path: /etc/apt/sources.list.d/luxmsbi.list
+      state: absent
+
+  when: ansible_os_family == "Altlinux"
+
+
+- name: Удаление репозитория для систем MosOS
+  block:
+
+  - name: Удаление Thirdparty Repository
+    zypper_repository:
+      name: luxms-thirdparty
+      state: absent
+
+  - name: Удаление BI Repository
+    zypper_repository:
+      name: luxms
+      state: absent
+
+  when: ansible_os_family is match("MosOS*")
