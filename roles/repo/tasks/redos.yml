@@ -1,5 +1,0 @@
-# ./roles/repo/tasks/redos.yml
----
-
-- name: "Add Luxms BI repositories"
-  import_tasks: set-luxms-dnf-repo.yml

@@ -1,3 +1,0 @@
-deb [ arch=amd64 ] https://download.luxms.ru/repository/alse18-bi10 1.8_x86-64 main
-deb [ arch=amd64 ] https://download.luxms.ru/repository/alse18-bi11 1.8_x86-64 main
-deb [trusted=yes] https://download.luxms.ru/repository/thirdparty-alse18 1.8_x86-64 main

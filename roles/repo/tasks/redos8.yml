@@ -1,5 +1,0 @@
-# ./roles/repo/tasks/redos8.yml
----
-
-- name: "Add Luxms BI repositories for REDOS 8"
-  import_tasks: set-luxms-redos8-repo.yml

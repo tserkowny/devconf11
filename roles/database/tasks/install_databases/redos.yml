@@ -1,5 +1,0 @@
-# roles/database/tasks/install_databases/redos.yml
----
-
-- name: "Install Luxms BI Demo Atlas"
-  shell: "dnf -y install /opt/lux-upd/install/demo/*"

@@ -1,3 +1,0 @@
-deb [ arch=amd64 ] https://download.luxms.ru/repository/alse-bi10 1.7_x86-64 main
-deb [ arch=amd64 ] https://download.luxms.ru/repository/alse-bi11 1.7_x86-64 main
-deb [trusted=yes] https://download.luxms.ru/repository/thirdparty-alse17 1.7_x86-64 main

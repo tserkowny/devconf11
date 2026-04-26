@@ -1,5 +1,0 @@
-# roles/repo/tasks/el8.yml
----
-
-- name: "Add Luxms BI repositories for EL 8"
-  import_tasks: set-luxms-el8-repo.yml

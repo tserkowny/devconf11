@@ -1,2 +1,0 @@
-deb https://apt-archive.postgresql.org/pub/repos/apt buster-pgdg main
-deb https://apt.postgresql.org/pub/repos/apt bullseye-pgdg 13
